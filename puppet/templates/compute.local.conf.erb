@@ -1,5 +1,7 @@
 [[local|localrc]]
-enable_plugin networking-odl https://github.com/stackforge/networking-odl
+#enable_plugin networking-odl https://github.com/stackforge/networking-odl
+#enable_plugin networking-odl /vagrant/x/networking-odl.git plugin
+enable_plugin networking-odl https://github.com/flavio-fernandes/networking-odl l3devel
 
 LOGFILE=stack.sh.log
 LOG_COLOR=False
@@ -24,7 +26,7 @@ ODL_NETVIRT_DEBUG_LOGS=True
 ODL_MGR_IP=<%= @hosts['opendaylight']['ipaddress'] %>
 ODL_PORT=8080
 ENABLE_TENANT_TUNNELS=True
-Q_ML2_TENANT_NETWORK_TYPE=vxlan
+Q_ML2_TENANT_NETWORK_TYPE=gre
 
 # NOTE: Set the database type
 DATABASE_TYPE=mysql
