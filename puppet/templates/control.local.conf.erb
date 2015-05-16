@@ -68,6 +68,7 @@ ADMIN_PASSWORD=admin
 disable_service q-l3
 Q_L3_ENABLED=True
 ODL_L3=True
+PUBLIC_INTERFACE=eht2
 [[post-config|$NEUTRON_CONF]]
 [DEFAULT]
 service_plugins = networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
