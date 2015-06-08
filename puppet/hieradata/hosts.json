@@ -6,11 +6,11 @@
     },
     "devstack-control": {
       "name": "devstack-control",
-      "ipaddress": "192.168.50.20"
+      "ipaddress": "192.168.10.20"
     },
     "devstack-compute-1": {
       "name": "devstack-compute-1",
-      "ipaddress": "192.168.50.21"
+      "ipaddress": "192.168.10.21"
     },
     "devstack-compute-2": {
       "name": "devstack-compute-2",

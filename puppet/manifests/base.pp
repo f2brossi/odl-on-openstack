@@ -16,7 +16,6 @@ $deps = [
     'gcc',
     'genisoimage',
     'git',
-    'graphviz',
     'iptables',
     'iputils-arping',
     'iputils-ping',
@@ -79,8 +78,7 @@ $deps = [
     'unzip',
     'vlan',
     'wget',
-    'xbase-clients',
-    'wireshark'
+    'xbase-clients'
 ]
 
 $hosts = hiera('hosts')
@@ -100,17 +98,17 @@ package { $deps:
 
 exec {"Download Open vSwitch":
     command => "wget http://openvswitch.org/releases/openvswitch-${ovs_version}.tar.gz",
-    cwd     => "/home/vagrant",
-    creates => "/home/vagrant/openvswitch-${ovs_version}.tar.gz",
+    cwd     => "/home/stack",
+    creates => "/home/stack/openvswitch-${ovs_version}.tar.gz",
     path    => $::path,
-    user    => 'vagrant'
+    user    => 'stack'
 }
 
 exec { 'Extract Open vSwitch':
     command => "tar -xvf openvswitch-${ovs_version}.tar.gz",
-    cwd     => '/home/vagrant',
-    creates => "/home/vagrant/openvswitch-${ovs_version}",
-    user    => 'vagrant',
+    cwd     => '/home/stack',
+    creates => "/home/stack/openvswitch-${ovs_version}",
+    user    => 'stack',
     path    => $::path,
     timeout => 0,
     require => Exec['Download Open vSwitch']
@@ -118,8 +116,8 @@ exec { 'Extract Open vSwitch':
 
 exec { 'Compile Open vSwitch':
     command => 'fakeroot debian/rules binary',
-    cwd     => "/home/vagrant/openvswitch-${ovs_version}",
-    creates => "/home/vagrant/openvswitch-common_${ovs_version}-1_amd64.deb",
+    cwd     => "/home/stack/openvswitch-${ovs_version}",
+    creates => "/home/stack/openvswitch-common_${ovs_version}-1_amd64.deb",
     user    => 'root',
     path    => $::path,
     timeout => 0,
@@ -129,27 +127,27 @@ exec { 'Compile Open vSwitch':
 package { 'openvswitch-common':
     ensure   => installed,
     provider => dpkg,
-    source   => "/home/vagrant/openvswitch-common_${ovs_version}-1_amd64.deb",
+    source   => "/home/stack/openvswitch-common_${ovs_version}-1_amd64.deb",
     require  => Exec['Compile Open vSwitch']
 }
 
 package { 'openvswitch-switch':
     ensure   => installed,
     provider => dpkg,
-    source   => "/home/vagrant/openvswitch-switch_${ovs_version}-1_amd64.deb",
+    source   => "/home/stack/openvswitch-switch_${ovs_version}-1_amd64.deb",
     require  => Package['openvswitch-common']
 }
 
 package { 'openvswitch-datapath-dkms':
     ensure   => installed,
     provider => dpkg,
-    source   => "/home/vagrant/openvswitch-datapath-dkms_${ovs_version}-1_all.deb",
+    source   => "/home/stack/openvswitch-datapath-dkms_${ovs_version}-1_all.deb",
     require  => Package['openvswitch-switch']
 }
 
 package { 'openvswitch-pki':
     ensure   => installed,
     provider => dpkg,
-    source   => "/home/vagrant/openvswitch-pki_${ovs_version}-1_all.deb",
+    source   => "/home/stack/openvswitch-pki_${ovs_version}-1_all.deb",
     require  => Package['openvswitch-datapath-dkms']
 }

@@ -3,7 +3,7 @@ require 'vagrant-openstack-provider'
 Vagrant.configure("2") do |config|
 
   config.vm.box = "openstack"
-  config.vm.box_url = "https://github.com/ggiamarchi/vagrant-openstack/raw/master/source/dummy.box"
+   config.vm.box_url = "https://github.com/ggiamarchi/vagrant-openstack/raw/master/source/dummy.box"
 
   config.ssh.shell = "bash"
   config.ssh.username = "stack"
@@ -20,37 +20,36 @@ Vagrant.configure("2") do |config|
     #os.keypair_name = ENV['OS_KEYPAIR_NAME']
   end
 
-  # Devstack Controller
-  config.vm.define "devstack-control", primary: true do |control|
-   control.vm.provider :openstack do |os|
-     os.server_name = "devstack-control"
-     os.floating_ip = ENV['OS_FLOATING_IP']
+  # Devstack Compute
+  config.vm.define "devstack-compute-1", primary: true do |compute|
+   compute.vm.provider :openstack do |os|
+     os.server_name = "devstack-compute-1"
+     os.floating_ip = ENV['OS_FLOATING_IP2']
      os.flavor = ENV['OS_FLAVOR']
      os.image = ENV['OS_IMAGE']
      #os.networks = [ENV['OS_NETWORK']]
      os.networks = [
         {
           id: '4d977b28-b96e-48a7-b651-ef7aaed70ca7',
-          address: '192.168.10.20'
+          address: '192.168.10.21'
         }]
    end
 end
 
   # Install puppet  
-  config.vm.provision "shell", path: "puppet/scripts/bootstrap.sh"
+  config.vm.provision "shell", path: "../puppet/scripts/bootstrap.sh"
 
   config.vm.provision "puppet" do |puppet|
-      puppet.hiera_config_path = "puppet/hiera.yaml"
+      puppet.hiera_config_path = "../puppet/hiera.yaml"
       puppet.working_directory = "/vagrant/puppet"
-      puppet.manifests_path = "puppet/manifests"
+      puppet.manifests_path = "../puppet/manifests"
       puppet.manifest_file  = "base.pp"
   end
     
   config.vm.provision "puppet" do |puppet|
-      puppet.hiera_config_path = "puppet/hiera.yaml"
+      puppet.hiera_config_path = "../puppet/hiera.yaml"
       puppet.working_directory = "/vagrant/puppet"
-      puppet.manifests_path = "puppet/manifests"
-      puppet.manifest_file  = "devstack-control.pp"
+      puppet.manifests_path = "../puppet/manifests"
+      puppet.manifest_file  = "devstack-compute.pp"
   end
 end
-

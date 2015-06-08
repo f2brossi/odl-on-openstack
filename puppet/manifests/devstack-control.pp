@@ -1,18 +1,18 @@
-vcsrepo {'/home/vagrant/devstack':
+vcsrepo {'/home/stack/devstack':
     ensure   => present,
     provider => git,
-    user     => 'vagrant',
+    user     => 'stack',
     source   => 'https://github.com/openstack-dev/devstack.git',
     # source   => 'https://github.com/flavio-fernandes/devstack.git',
     # revision => 'odlDevel',
-    before   => File['/home/vagrant/devstack/local.conf'],
+    before   => File['/home/stack/devstack/local.conf'],
 }
 
 $hosts = hiera('hosts')
 
-file { '/home/vagrant/devstack/local.conf':
+file { '/home/stack/devstack/local.conf':
     ensure  => present,
-    owner   => 'vagrant',
-    group   => 'vagrant',
+    owner   => 'stack',
+    group   => 'stack',
     content => template('/vagrant/puppet/templates/control.local.conf.erb'),
 }
