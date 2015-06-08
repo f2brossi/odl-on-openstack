@@ -1,7 +1,7 @@
 odl-on-openstack
 ==============
 
-This repo provides a Vagrantfile for [Vagrant Openstack Provider](https://github.com/ggiamarchi/vagrant-openstack-provider) with puppet provisioning that one can use to easily get a cluster of nodes configured with DevStack and the SDN OpenDayligth.
+This repo provides a Vagrantfile for the Vagrant Openstack Provider (https://github.com/ggiamarchi/vagrant-openstack-provider) with Puppet provisioning that one can use to easily get a cluster of nodes configured with DevStack using OpenDayligth as SDN.
 
 Usage
 -----
