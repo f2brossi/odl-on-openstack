@@ -36,14 +36,15 @@ First, run the ODL Controller on devstack-control ::
     vagrant ssh
     cd devstack
     ./stack.sh
-Secondn run the Compute node ::
+    
+Second,  run the Compute node ::
+    
     cd compute
     vagrant up --provider=openstack
     vagrant ssh
     cd devstack
     ./stack.sh
     
-
 If you would like more than one compute node, you can set thse following environment variable::
 
     #Note: Only 3 or less nodes are supported today
