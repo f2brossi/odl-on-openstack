@@ -1,8 +1,7 @@
-devstack-nodes
+odl-on-openstack
 ==============
 
-This repo provides a Vagrantfile with provisioning that one can use to easily
-get a cluster of nodes configured with DevStack.
+This repo provides a Vagrantfile for [Vagrant Openstack Provider](https://github.com/ggiamarchi/vagrant-openstack-provider) with puppet provisioning that one can use to easily get a cluster of nodes configured with DevStack and the SDN OpenDayligth.
 
 Usage
 -----
@@ -30,12 +29,22 @@ To use these drivers with Devstack....
 Testing
 -------
 
-A Vagrantfile is provided to easily create a DevStack environment to test with
-First, run the ODL Controller on your local machine, then::
+A Vagrantfile is provided to easily create a DevStack environment to test with.
+First, run the ODL Controller on devstack-control ::
 
-    vagrant up
+    vagrant up --provider=openstack
+    vagrant ssh
+    cd devstack
+    ./stack.sh
+Secondn run the Compute node ::
+    cd compute
+    vagrant up --provider=openstack
+    vagrant ssh
+    cd devstack
+    ./stack.sh
+    
 
-If you would like more than one compute node, you can set the following environment variable::
+If you would like more than one compute node, you can set thse following environment variable::
 
     #Note: Only 3 or less nodes are supported today
     export DEVSTACK_NUM_COMPUTE_NODES=3
