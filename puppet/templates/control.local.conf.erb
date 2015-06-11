@@ -50,8 +50,7 @@ SERVICE_PASSWORD=admin
 ADMIN_PASSWORD=admin
 
 ## enable_plugin networking-odl https://github.com/stackforge/networking-odl
-#enable_plugin networking-odl https://github.com/flavio-fernandes/networking-odl helium
-enable_plugin networking-odl https://github.com/stackforge/networking-odl
+enable_plugin networking-odl https://github.com/flavio-fernandes/networking-odl helium
 #ODL_NETVIRT_DEBUG_LOGS=True
 ODL_MGR_IP=<%= @hosts['opendaylight']['ipaddress'] %>
 ODL_PORT=8080
@@ -62,10 +61,10 @@ ODL_BOOT_WAIT=123
 # https://git.opendaylight.org/gerrit/#/c/19409/
 # https://bugs.opendaylight.org/show_bug.cgi?id=3005
 #
-#ODL_RELEASE=helium
-#ODL_NAME="distribution-karaf-0.2.4-SNAPSHOT"
-#ODL_PKG="distribution-karaf-0.2.4-SNAPSHOT.zip"
-#ODL_URL="https://objects.dreamhost.com:443/flaviof/flaviof.com"
+ODL_RELEASE=helium
+ODL_NAME="distribution-karaf-0.2.4-SNAPSHOT"
+ODL_PKG="distribution-karaf-0.2.4-SNAPSHOT.zip"
+ODL_URL="https://objects.dreamhost.com:443/flaviof/flaviof.com"
 
 # If using ODL outside devstack-control, replace ODL_MODE
 # ODL_MODE=externalodl
@@ -74,11 +73,11 @@ ODL_BOOT_WAIT=123
 # For more info:  https://github.com/stackforge/networking-odl/blob/master/devstack/README.rst
 # enable_service q-l3
 disable_service q-l3
-Q_L3_ENABLED=True
-ODL_L3=True
+#Q_L3_ENABLED=True
+#ODL_L3=True
 [[post-config|$NEUTRON_CONF]]
 [DEFAULT]
-service_plugins = networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
+#service_plugins = networking_odl.l3.l3_odl.OpenDaylightL3RouterPlugin
 
 [[post-config|/etc/neutron/plugins/ml2/ml2_conf.ini]]
 [agent]
