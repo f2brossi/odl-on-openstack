@@ -49,3 +49,7 @@ If you would like more than one compute node, you can set thse following environ
 
     #Note: Only 3 or less nodes are supported today
     export DEVSTACK_NUM_COMPUTE_NODES=3
+    
+Where to find an Openstack public cloud provider ?
+------
+[List of Openstack public cloud providers] (https://www.openstack.org/marketplace/public-clouds/)
