@@ -1,4 +1,7 @@
 [[local|localrc]]
+#enable_plugin networking-odl https://github.com/openstack/networking-odl stable/kilo
+enable_plugin networking-odl https://github.com/flavio-fernandes/networking-odl lithiumkilo
+
 LOGFILE=stack.sh.log
 LOG_COLOR=False
 SCREEN_LOGDIR=/opt/stack/data/log
@@ -6,7 +9,7 @@ SCREEN_LOGDIR=/opt/stack/data/log
 RECLONE=yes
 
 disable_all_services
-enable_service nova n-cpu quantum n-novnc rabbit
+enable_service n-cpu
 
 HOST_IP=<%= @hosts[@hostname]['ipaddress'] %>
 HOST_NAME=<%= @hosts[@hostname]['name'] %>
@@ -16,13 +19,10 @@ SERVICE_HOST_NAME=<%= @hosts['devstack-control']['name'] %>
 VNCSERVER_PROXYCLIENT_ADDRESS=$HOST_IP
 VNCSERVER_LISTEN=0.0.0.0
 
-Q_PLUGIN=ml2
+ODL_MODE=compute
+ODL_MGR_IP=<%= @hosts['opendaylight']['ipaddress'] %>
 ENABLE_TENANT_TUNNELS=True
 Q_ML2_TENANT_NETWORK_TYPE=vxlan
-
-# NOTE: Set the database type
-DATABASE_TYPE=mysql
-KEYSTONE_CATALOG_BACKEND=sql
 
 Q_HOST=$SERVICE_HOST
 MYSQL_HOST=$SERVICE_HOST
@@ -31,17 +31,27 @@ GLANCE_HOSTPORT=$SERVICE_HOST:9292
 KEYSTONE_AUTH_HOST=$SERVICE_HOST
 KEYSTONE_SERVICE_HOST=$SERVICE_HOST
 
-MYSQL_PASSWORD=mysql
+DATABASE_PASSWORD=mysql
 RABBIT_PASSWORD=rabbit
 SERVICE_TOKEN=service
 SERVICE_PASSWORD=admin
 ADMIN_PASSWORD=admin
 
-## enable_plugin networking-odl https://github.com/stackforge/networking-odl
-enable_plugin networking-odl https://github.com/flavio-fernandes/networking-odl helium
-ODL_MODE=compute
-ODL_MGR_IP=<%= @hosts['opendaylight']['ipaddress'] %>
+# Uncomment lines below if odl-compute is to be used for l3 forwarding
+Q_L3_ENABLED=True
+ODL_L3=True
+PUBLIC_INTERFACE=eth2
 
-[[post-config|$NOVA_CONF]]
-[oslo_messaging_rabbit]
-heartbeat_timeout_threshold = 0
+BRANCH=stable/kilo
+GLANCE_BRANCH=$BRANCH
+HORIZON_BRANCH=$BRANCH
+KEYSTONE_BRANCH=$BRANCH
+NOVA_BRANCH=$BRANCH
+NEUTRON_BRANCH=$BRANCH
+SWIFT_BRANCH=$BRANCH
+##CLIFF_BRANCH=$BRANCH
+##TEMPEST_BRANCH=$BRANCH
+CINDER_BRANCH=$BRANCH
+HEAT_BRANCH=$BRANCH
+TROVE_BRANCH=$BRANCH
+CEILOMETER_BRANCH=$BRANCH

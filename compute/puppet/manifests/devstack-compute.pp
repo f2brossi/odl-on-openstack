@@ -1,16 +1,22 @@
-vcsrepo {'/home/stack/devstack':
+
+$hosts = hiera('hosts')
+
+file { '/home/stack/devstack':
+   ensure => 'link',
+   target => '/opt/devstack',
+}
+
+vcsrepo { '/opt/devstack':
     ensure   => present,
     provider => git,
     user     => 'stack',
     source   => 'https://github.com/openstack-dev/devstack.git',
     # source   => 'https://github.com/flavio-fernandes/devstack.git',
-    # revision => 'odlDevel',
-    before   => File['/home/stack/devstack/local.conf'],
+    revision => 'stable/kilo',
+    before   => File['/opt/devstack/local.conf'],
 }
 
-$hosts = hiera('hosts')
-
-file { '/home/stack/devstack/local.conf':
+file { '/opt/devstack/local.conf':
     ensure  => present,
     owner   => 'stack',
     group   => 'stack',

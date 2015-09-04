@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
 
   config.ssh.shell = "bash"
   config.ssh.username = "stack"
-  #config.ssh.private_key_path = ENV['OS_KEYPAIR_PRIVATE_KEY']
+  #config.ssh.pty = true
 
   config.vm.provider :openstack do |os|
     os.username = ENV['OS_USERNAME']
@@ -30,27 +30,28 @@ Vagrant.configure("2") do |config|
      #os.networks = [ENV['OS_NETWORK']]
      os.networks = [
         {
-          id: '4d977b28-b96e-48a7-b651-ef7aaed70ca7',
+          id: '2733e36c-7f85-44dd-8423-17332cf706a0',
           address: '192.168.10.20'
         }]
    end
-end
+  end
 
-  # Install puppet  
+  # Install puppet
   config.vm.provision "shell", path: "puppet/scripts/bootstrap.sh"
 
   config.vm.provision "puppet" do |puppet|
-      puppet.hiera_config_path = "puppet/hiera.yaml"
-      puppet.working_directory = "/vagrant/puppet"
-      puppet.manifests_path = "puppet/manifests"
-      puppet.manifest_file  = "base.pp"
+     puppet.hiera_config_path = "puppet/hiera.yaml"
+     puppet.working_directory = "/vagrant/puppet"
+     puppet.manifests_path = "puppet/manifests"
+     puppet.manifest_file  = "base.pp"
+     puppet.options = "--verbose --debug"
   end
-    
+
   config.vm.provision "puppet" do |puppet|
       puppet.hiera_config_path = "puppet/hiera.yaml"
       puppet.working_directory = "/vagrant/puppet"
       puppet.manifests_path = "puppet/manifests"
       puppet.manifest_file  = "devstack-control.pp"
+      puppet.options = "--verbose --debug"
   end
 end
-
