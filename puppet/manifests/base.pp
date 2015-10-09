@@ -31,7 +31,7 @@ file { "/opt":
 vcsrepo {'/opt/tools':
     ensure   => present,
     provider => git,
-    user     => 'stack',
+    user     => 'centos',
     source   => 'https://github.com/shague/odl_tools.git',
     require  => File['/opt'],
 }

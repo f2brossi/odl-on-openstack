@@ -6,9 +6,12 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "https://github.com/ggiamarchi/vagrant-openstack/raw/master/source/dummy.box"
 
   config.ssh.shell = "bash"
-  config.ssh.username = "stack"
-  #config.ssh.pty = true
+  config.ssh.username = "centos"
+  config.ssh.pty = true
 
+  # Install puppet
+  config.vm.provision "shell", path: "puppet/scripts/bootstrap.sh"
+ 
   config.vm.provider :openstack do |os|
     os.username = ENV['OS_USERNAME']
     os.password = ENV['OS_PASSWORD']
@@ -30,14 +33,11 @@ Vagrant.configure("2") do |config|
      #os.networks = [ENV['OS_NETWORK']]
      os.networks = [
         {
-          id: '2733e36c-7f85-44dd-8423-17332cf706a0',
+          id: '4d977b28-b96e-48a7-b651-ef7aaed70ca7',
           address: '192.168.10.20'
         }]
    end
   end
-
-  # Install puppet
-  config.vm.provision "shell", path: "puppet/scripts/bootstrap.sh"
 
   config.vm.provision "puppet" do |puppet|
      puppet.hiera_config_path = "puppet/hiera.yaml"
@@ -49,7 +49,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "puppet" do |puppet|
       puppet.hiera_config_path = "puppet/hiera.yaml"
-      puppet.working_directory = "/vagrant/puppet"
       puppet.manifests_path = "puppet/manifests"
       puppet.manifest_file  = "devstack-control.pp"
       puppet.options = "--verbose --debug"

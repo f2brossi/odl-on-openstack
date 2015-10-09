@@ -1,0 +1,5 @@
+## setup_mysql.txt
+## mysql --user=root --password="" mysql < setup_mysql.txt
+#
+UPDATE mysql.user SET Password = PASSWORD('mysql') WHERE User = 'root';
+FLUSH PRIVILEGES;

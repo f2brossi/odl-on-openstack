@@ -1,10 +1,17 @@
 $deps = [
     'mariadb-server',
 ]
+file { '/etc/yum.repos.d/mariadb.repo':
+	ensure => present,
+	owner => 'root',
+	group => 'root',
+	content => template('/vagrant/puppet/templates/mariadb.repo.erb')
+}
+
 
 $hosts = hiera('hosts')
 
-file { '/home/stack/devstack':
+file { '/home/centos/devstack':
    ensure => 'link',
    target => '/opt/devstack',
 }
@@ -16,38 +23,37 @@ package { $deps:
 # Warm Maria up, so initial password is non-empty
 # Ref: https://gist.github.com/333007187d69fe2fe282
 #
-service { 'mysql':
+service { 'mariadb.service':
     ensure => 'running',
     require => Package[$deps],
-    enable => true,
 }
 file { '/tmp/setup_mysql.txt':
     ensure  => present,
-    owner   => 'stack',
-    group   => 'stack',
+    owner   => 'centos',
+    group   => 'centos',
     content => template('/vagrant/puppet/templates/setup_mysql.erb'),
 }
 exec { 'Warmup mysql':
     command => '/usr/bin/mysql --user=root --password="" mysql < /tmp/setup_mysql.txt',
-    user    => 'stack',
+    user    => 'centos',
     onlyif  => ['/usr/bin/test -f /usr/bin/mysql'],
-    require => [File['/tmp/setup_mysql.txt'], Service['mysql']],
+    require => [File['/tmp/setup_mysql.txt'], Service['mariadb.service']],
 }
 
 vcsrepo { '/opt/devstack':
     ensure   => present,
     provider => git,
-    user     => 'stack',
+    user     => 'centos',
     source   => 'https://github.com/openstack-dev/devstack.git',
-    # source   => 'https://github.com/flavio-fernandes/devstack.git',
+     #source   => 'https://github.com/flavio-fernandes/devstack.git',
     revision => 'stable/kilo',
     before   => File['/opt/devstack/local.conf'],
 }
 
 file { '/opt/devstack/local.conf':
     ensure  => present,
-    owner   => 'stack',
-    group   => 'stack',
+    owner   => 'centos',
+    group   => 'centos',
     content => template('/vagrant/puppet/templates/control.local.conf.erb'),
 }
 

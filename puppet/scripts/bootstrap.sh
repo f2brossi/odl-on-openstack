@@ -1,56 +1,43 @@
 #!/usr/bin/env bash
-#
-# This bootstraps Puppet on Ubuntu 12.04 LTS.
-#
+# This bootstraps Puppet on CentOS 7.x
+# It has been tested on CentOS 7.0 64bit
+
 set -e
-# Load up the release information
 
-. /etc/lsb-release
+REPO_URL="http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm"
 
-REPO_DEB_URL="http://apt.puppetlabs.com/puppetlabs-release-pc1-trusty.deb"
-
-#--------------------------------------------------------------------
-# NO TUNABLES BELOW THIS POINT
-#--------------------------------------------------------------------
-if [ "$(id -u)" != "0" ]; then
+if [ "$EUID" -ne "0" ]; then
   echo "This script must be run as root." >&2
   exit 1
 fi
 
-if which puppet > /dev/null 2>&1 && apt-cache policy | grep --quiet apt.puppetlabs.com; then
+if which puppet > /dev/null 2>&1; then
   echo "Puppet is already installed."
   exit 0
 fi
 
-# Do the initial apt-get update
-echo "Initial apt-get update..."
-apt-get update >/dev/null
+sudo yum -y install wget 
 
-# Install wget if we have to (some older Ubuntu versions)
-echo "Installing wget..."
-apt-get install -y wget >/dev/null
-
-# Install the PuppetLabs repo
 echo "Configuring PuppetLabs repo..."
-repo_deb_path=$(mktemp)
-wget --output-document="${repo_deb_path}" "${REPO_DEB_URL}" 2>/dev/null
-dpkg -i "${repo_deb_path}" >/dev/null
-apt-get update >/dev/null
-
-# Install Puppet
-echo "Installing Puppet..."
-DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install puppet >/dev/null
+repo_path=$(mktemp)
+wget --output-document="${repo_path}" "${REPO_URL}" 2>/dev/null
+rpm -i "${repo_path}" >/dev/null
+echo "fred config done"
+# Install Puppet...
+echo "Installing puppet"
+yum install -y puppet > /dev/null
 
 echo "Puppet installed!"
-
-# Install RubyGems for the provider
-echo "Installing RubyGems..."
-if [ $DISTRIB_CODENAME != "trusty" ]; then
-  apt-get install -y rubygems >/dev/null
-fi
-gem install --no-ri --no-rdoc rubygems-update
-update_rubygems >/dev/null
 
 # Installing Puppet Modules
 puppet module install puppetlabs/vcsrepo
 puppet module install puppetlabs/stdlib
+
+# Use iptables instead of firewalld since that is what OpenStack uses.
+# Remove firewalld since devstack has a bug that will reenable it
+#systemctl stop firewalld.service
+yum remove -y firewalld
+yum install -y iptables-services
+touch /etc/sysconfig/iptables
+systemctl enable iptables.service
+systemctl start iptables.service
